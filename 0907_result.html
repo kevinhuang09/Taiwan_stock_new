@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本週除息填息觀察｜0907</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12161C;
+    --card: #1A2028;
+    --border: #2A323D;
+    --gain: #E5484D;   /* 紅：正分 / 填息機率偏高 */
+    --loss: #2FA875;   /* 綠：負分 / 填息機率偏低 */
+    --neutral: #8A93A3;
+    --gold: #D4A24C;
+    --text-main: #EDEFF2;
+    --text-sub: #A7AFBC;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1.6;
+    padding: 32px 16px 64px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin: 0 0 8px;
+    color: var(--text-main);
+  }
+  header .subtitle {
+    color: var(--text-sub);
+    font-size: 14px;
+  }
+  header .subtitle .mono { font-family: 'IBM Plex Mono', monospace; color: var(--gold); }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 26px;
+  }
+  .stat .label {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 4px;
+  }
+  .stat.gain .num { color: var(--gain); }
+  .stat.loss .num { color: var(--loss); }
+  .stat.neutral .num { color: var(--neutral); }
+  .stat.gold .num { color: var(--gold); }
+
+  section { margin-bottom: 36px; }
+  section h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    border-left: 3px solid var(--gold);
+    padding-left: 10px;
+    margin-bottom: 14px;
+    color: var(--text-main);
+  }
+
+  .notice-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 18px 20px;
+    color: var(--text-sub);
+    font-size: 14px;
+  }
+  .notice-box strong { color: var(--gold); }
+  .notice-box p { margin: 0 0 10px; }
+  .notice-box p:last-child { margin-bottom: 0; }
+  .notice-box ul { margin: 8px 0; padding-left: 20px; }
+  .notice-box code {
+    font-family: 'IBM Plex Mono', monospace;
+    background: #0F1319;
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--gold);
+    font-size: 13px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+
+  .lite-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .lite-table th, .lite-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .lite-table th {
+    color: var(--text-sub);
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .lite-table td.mono { font-family: 'IBM Plex Mono', monospace; }
+  .lite-table tr:last-child td { border-bottom: none; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 40px;
+    font-size: 12px;
+    color: var(--neutral);
+  }
+  footer h3 {
+    font-size: 13px;
+    color: var(--text-sub);
+    margin: 18px 0 6px;
+    font-weight: 500;
+  }
+  footer h3:first-child { margin-top: 0; }
+  footer p { margin: 4px 0; }
+  footer .swatch {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  footer .usage-disclosure {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    color: var(--gold);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>本週除息填息觀察</h1>
+    <div class="subtitle">資料期間：<span class="mono">2026/09/07 – 2026/09/14</span>（台股）</div>
+  </header>
+
+  <div class="summary">
+    <div class="stat gain"><div class="num">0</div><div class="label">已深入分析</div></div>
+    <div class="stat neutral"><div class="num">0</div><div class="label">資料有限</div></div>
+    <div class="stat gold"><div class="num">0</div><div class="label">可留意</div></div>
+    <div class="stat loss"><div class="num">0</div><div class="label">不建議</div></div>
+  </div>
+
+  <section>
+    <h2>本次執行狀況說明</h2>
+    <div class="notice-box">
+      <p><strong>本次未能列出具名個股清單。</strong>依用量上限規定，抓取除權息清單步驟最多可使用 2 次網路搜尋＋1 次網頁擷取，本次已依上限執行：</p>
+      <ul>
+        <li>搜尋 1：查詢台股 2026/09/07–09/14 除權息名單來源</li>
+        <li>搜尋 2：嘗試以日期＋現金股利關鍵字定位個股代號</li>
+        <li>擷取 1：MoneyDJ 除權除息表（依日期）</li>
+      </ul>
+      <p>擷取結果僅回傳「除權息日期／現金股利／股票股利」等數值欄位，未附上市櫃「股票代號與名稱」對應資訊，其餘候選來源（HiStock、Goodinfo、凱基證券、TWSE 公告）皆需額外擷取才能取得個股名稱，已超出本步驟上限，故本次<strong>停止在此步驟</strong>，不進入個股篩選與深入查證，以避免超出用量上限或編造個股資訊。</p>
+      <p>建議直接查詢以下來源取得完整具名清單：<br>
+      <code>TWSE 除權除息預告表</code>（twse.com.tw）、<code>HiStock 除權除息日程表</code>（histock.tw）、<code>Goodinfo 即將除權息</code>（goodinfo.tw）</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>個股｜已深入分析</h2>
+    <div class="notice-box">本次無個股進入深入分析階段（見上方執行狀況說明）。</div>
+  </section>
+
+  <section>
+    <h2>個股｜資料有限</h2>
+    <div class="notice-box">本次無法取得具名個股清單，故無項目可列入本區塊。</div>
+  </section>
+
+  <section>
+    <h2>ETF</h2>
+    <div class="notice-box">本次無法取得具名個股清單，無法區分個股與 ETF/債券基金，故本區塊暫無資料。</div>
+  </section>
+
+  <footer>
+    <h3>免責聲明</h3>
+    <p>本頁內容僅為公開資訊之整理與觀察，不構成任何投資建議或買賣邀約。填息機率評分為主觀研判，不保證未來走勢，投資人應自行查證並審慎評估風險，投資前請諮詢專業意見。</p>
+
+    <h3>評分區間說明</h3>
+    <p>評分僅適用於「已深入分析」個股，區間為 -3 至 +3：+3～+1 表示填息機率偏高；0 表示機會與風險相當或資料不足；-1～-3 表示填息機率偏低或有明確風險。「資料有限」個股未經評分，不代表看法傾向。</p>
+
+    <h3>紅漲綠跌配色說明</h3>
+    <p><span class="swatch" style="background:var(--gain)"></span>紅色（--gain）＝正分／填息機率偏高，符合台股「紅漲」慣例；<span class="swatch" style="background:var(--loss)"></span>綠色（--loss）＝負分／填息機率偏低，符合台股「綠跌」慣例。</p>
+
+    <h3>資料有限查證限制說明</h3>
+    <p>受限於每日執行之用量上限，僅能對至多 5 檔個股進行深入查證（每檔至多 2 次網路搜尋），其餘個股一律歸類為「資料有限（未評分）」，不代表基本面不佳，僅代表本次未及查證。</p>
+
+    <h3>本次用量與實際查證揭露（誠實聲明）</h3>
+    <div class="usage-disclosure">
+      本次因用量限制，實際 <strong>0 檔</strong> 個股進入深入分析。抓取除權息清單步驟已用滿上限（2 次搜尋＋1 次擷取），因來源僅回傳數值欄位、未附股票代號／名稱對應，故提前終止流程，未進入個股篩選與查證階段。本次執行總計使用網路查詢 3 次（上限 15 次）。
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
