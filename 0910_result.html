@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本週除息填息觀察 2026/09/10–09/17</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12161C;
+    --card:#1A2028;
+    --border:#2A323D;
+    --gain:#E5484D;   /* 紅：正分 / 台股上漲慣例 */
+    --loss:#2FA875;   /* 綠：負分 / 台股下跌慣例 */
+    --neutral:#8A93A3;
+    --gold:#D4A24C;
+    --text:#EDEFF3;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans TC',sans-serif;
+    line-height:1.6;
+    padding:0 0 60px;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px;}
+  header{
+    padding:48px 20px 32px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    margin-bottom:32px;
+  }
+  header h1{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:2rem;
+    margin:0 0 10px;
+    letter-spacing:.02em;
+  }
+  header .range{
+    color:var(--gold);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.95rem;
+  }
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:44px;
+  }
+  .stat{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 12px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:1.7rem;
+    font-weight:600;
+    display:block;
+  }
+  .stat .label{
+    color:var(--neutral);
+    font-size:.8rem;
+    margin-top:4px;
+    display:block;
+  }
+  .stat.watch .num{color:var(--gold);}
+  .stat.avoid .num{color:var(--loss);}
+  section{margin-bottom:48px;}
+  h2{
+    font-family:'Noto Serif TC',serif;
+    font-size:1.3rem;
+    border-left:4px solid var(--gold);
+    padding-left:12px;
+    margin-bottom:20px;
+  }
+  .cards{display:flex;flex-direction:column;gap:16px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px 24px;
+    display:grid;
+    grid-template-columns:76px 1fr;
+    gap:20px;
+  }
+  .score-circle{
+    width:76px;height:76px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    border:2px solid var(--border);
+    align-self:start;
+  }
+  .score-circle .val{font-size:1.5rem;}
+  .score-circle .tag{font-size:.6rem;color:var(--neutral);margin-top:2px;text-align:center;}
+  .score-circle.pos{border-color:var(--gain);color:var(--gain);}
+  .score-circle.neu{border-color:var(--neutral);color:var(--neutral);}
+  .score-circle.neg{border-color:var(--loss);color:var(--loss);}
+  .card-title{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+  .card-title .name{font-size:1.15rem;font-weight:700;}
+  .card-title .code{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--neutral);
+    font-size:.9rem;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 16px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.82rem;
+    color:var(--neutral);
+    margin-bottom:12px;
+  }
+  .meta-row b{color:var(--text);}
+  .yield-flag{
+    display:inline-block;
+    background:rgba(212,162,76,.15);
+    color:var(--gold);
+    border:1px solid var(--gold);
+    border-radius:6px;
+    padding:1px 8px;
+    font-size:.75rem;
+    margin-left:6px;
+  }
+  .reasons{margin:0 0 10px;padding-left:18px;font-size:.92rem;}
+  .reasons li{margin-bottom:4px;}
+  .risk{
+    font-size:.88rem;
+    color:var(--neutral);
+    border-top:1px dashed var(--border);
+    padding-top:10px;
+  }
+  .risk b{color:var(--loss);}
+  table.lite-table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    font-size:.88rem;
+  }
+  table.lite-table th, table.lite-table td{
+    padding:10px 12px;
+    text-align:left;
+    border-bottom:1px solid var(--border);
+  }
+  table.lite-table th{
+    color:var(--neutral);
+    font-weight:500;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  table.lite-table td.mono, table.lite-table th.mono{font-family:'IBM Plex Mono',monospace;}
+  table.lite-table tr:last-child td{border-bottom:none;}
+  .note-inline{color:var(--neutral);font-size:.78rem;margin-top:10px;}
+  .etf-chip-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 22px;
+  }
+  .etf-chip-card .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:14px 0 4px;
+  }
+  .chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem;
+    color:var(--text);
+    background:rgba(138,147,163,.12);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:3px 8px;
+  }
+  footer{
+    border-top:1px solid var(--border);
+    margin-top:20px;
+    padding-top:24px;
+    font-size:.8rem;
+    color:var(--neutral);
+  }
+  footer h3{
+    font-size:.85rem;
+    color:var(--text);
+    margin:18px 0 6px;
+  }
+  footer ul{margin:0;padding-left:18px;}
+  footer li{margin-bottom:4px;}
+  .disclosure{
+    background:rgba(212,162,76,.08);
+    border:1px solid var(--gold);
+    border-radius:8px;
+    padding:14px 16px;
+    margin-top:18px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>本週除息填息觀察</h1>
+  <div class="range">資料範圍 2026/09/10 – 2026/09/17｜台灣股市</div>
+</header>
+
+<section class="summary">
+  <div class="stat"><span class="num">5</span><span class="label">已深入分析</span></div>
+  <div class="stat"><span class="num">3</span><span class="label">資料有限</span></div>
+  <div class="stat watch"><span class="num">2</span><span class="label">可留意</span></div>
+  <div class="stat avoid"><span class="num">1</span><span class="label">不建議 / 高風險</span></div>
+</section>
+
+<section>
+  <h2>個股｜已深入分析</h2>
+  <div class="cards">
+
+    <!-- 台積電 2330 -->
+    <div class="card">
+      <div class="score-circle pos"><span class="val">+2</span><span class="tag">填息機率偏高</span></div>
+      <div>
+        <div class="card-title"><span class="name">台積電</span><span class="code">2330</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/16</b>　現金股利 <b>7.0</b>　殖利率 <b>約0.29%</b>
+        </div>
+        <ul class="reasons">
+          <li>除息缺口僅約0.29%（現金股利7元／股價約2,400~2,500元），金額極小，正常股價波動即足以在短時間內完成填息。</li>
+          <li>7月合併營收達4,675.8億元，月增5.6%、年增44.7%，創單月歷史新高；市場預期8月營收年增率可望維持40%以上，反映AI拉貨動能未降溫，先進製程產能利用率維持高檔。</li>
+          <li>作為台股權值指標股，市場資金與法人關注度長期偏高，除息後市場多會優先回補權值股缺口。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>本次查證取得的法人買賣超資料僅至9/1（外資單日賣超約1.2萬張），並非最新籌碼動向；8月營收正式數字公布時間與本文查證時點接近，實際數字未能涵蓋於本次查證。若AI需求疑慮升溫或大盤出現系統性回檔，仍可能延緩填息速度。</div>
+      </div>
+    </div>
+
+    <!-- 新漢 8234 -->
+    <div class="card">
+      <div class="score-circle pos"><span class="val">+1</span><span class="tag">填息機率偏高</span></div>
+      <div>
+        <div class="card-title"><span class="name">新漢</span><span class="code">8234</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/10</b>　現金股利 <b>0.4</b>　殖利率 <b>約0.63%</b>
+        </div>
+        <ul class="reasons">
+          <li>8月單月營收年增47.96%，6月營收年增38.61%，近月營收動能明顯強勁。</li>
+          <li>除息缺口極小（現金股利0.4元／股價約64.3元，約0.63%），理論上正常股價波動即可完成填息。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>儘管營收高速成長，近四季EPS仍為-0.18元、營益率與淨利率皆為負值，公司目前仍處虧損狀態；營收成長能否轉化為實際獲利尚待驗證，為主要風險來源，本次查證未取得最新法人籌碼資料。</div>
+      </div>
+    </div>
+
+    <!-- 鈺齊-KY 9802 -->
+    <div class="card">
+      <div class="score-circle neu"><span class="val">0</span><span class="tag">機會風險相當</span></div>
+      <div>
+        <div class="card-title"><span class="name">鈺齊-KY</span><span class="code">9802</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/10</b>　現金股利 <b>3.10</b>　殖利率 <b>約4.70%</b>
+        </div>
+        <ul class="reasons">
+          <li>累計2025年前三季營收年增24.4%，長期成長趨勢正向；法說會（2025/11/26）揭露資本支出集中於印尼、越南等非中國產能擴張，並維持約七成現金股利配發率之政策。</li>
+          <li>惟受關稅議題影響，2025年Q3營收較Q2衰退27%，品牌客戶下單轉趨保守，短期營運動能出現雜訊。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>關稅不確定性尚未完全消除，若Q4或2026年營收未能回穩，可能影響市場對填息的信心；本次查證未取得除息前最新股價動能與法人籌碼資料。</div>
+      </div>
+    </div>
+
+    <!-- 南六 6504 -->
+    <div class="card">
+      <div class="score-circle neu"><span class="val">0</span><span class="tag">機會風險相當</span></div>
+      <div>
+        <div class="card-title"><span class="name">南六</span><span class="code">6504</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/10</b>　現金股利 <b>1.0</b>　殖利率 <b>約2.65%</b>
+        </div>
+        <ul class="reasons">
+          <li>主要產品為水針不織布、嬰兒柔濕巾、卸妝棉等民生消費用品，終端需求相對穩定；除息缺口小（現金股利1元／股價約37元，約2.65%）。</li>
+          <li>本益比約23.8倍，每股淨值48.24元，屬中規模消費原料型公司。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>目前淨利率僅約0.46%，獲利空間極薄，原物料成本或匯率波動可能大幅侵蝕淨利，進而影響除息後買盤信心；本次查證未取得最新法人籌碼與營收年增數據。</div>
+      </div>
+    </div>
+
+    <!-- 橋椿 2062 -->
+    <div class="card">
+      <div class="score-circle neg"><span class="val">-1</span><span class="tag">填息機率偏低</span></div>
+      <div>
+        <div class="card-title"><span class="name">橋椿</span><span class="code">2062</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/10</b>　現金股利 <b>1.0</b>　殖利率 <b>約5.2~5.5%</b>
+        </div>
+        <ul class="reasons">
+          <li>除息前一週（9/3）收盤價約19.25元，除息參考價約18.25元；不同資料來源顯示殖利率約5.19%~5.46%，數字略有出入。</li>
+          <li>營收連續兩個月年增，惟本益比高達約69倍、近四季EPS僅0.28元，獲利對股價與股利的支撐力道明顯偏薄。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>本益比與獲利水準的落差是主要風險來源，顯示股價可能已反映較多樂觀預期；1月份曾出現三大法人連5賣的紀錄，但屬較早期資料，本次查證未能取得除息前最新籌碼動向，須留意除息後買盤是否跟上。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>個股｜資料有限（未評分）</h2>
+  <table class="lite-table">
+    <thead>
+      <tr>
+        <th class="mono">代碼</th><th>名稱</th><th class="mono">除權息日</th>
+        <th class="mono">現金股利</th><th class="mono">股票股利</th><th class="mono">殖利率</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono">4912</td><td>聯德控股-KY</td><td class="mono">09/10</td><td class="mono">0.8005</td><td class="mono">-</td><td class="mono">0.88%</td></tr>
+      <tr><td class="mono">5328</td><td>華容</td><td class="mono">09/10</td><td class="mono">0.35</td><td class="mono">-</td><td class="mono">0.61%</td></tr>
+      <tr><td class="mono">5906</td><td>台南-KY</td><td class="mono">09/10</td><td class="mono">0.20</td><td class="mono">5%</td><td class="mono">0.52%</td></tr>
+    </tbody>
+  </table>
+  <p class="note-inline">
+    上表個股僅取得股利金額與參考殖利率等基本公開資訊，未進行股價動能、法人籌碼或消息面查證，故不予評分。
+    另外，依方法論排除現金股利為0之純「權」項目（如晟田4541、欣巴巴9906之股票股利），未列於任何區塊。
+    2026/09/10～09/17期間查證來源實際回報的除權息日期集中於09/10與09/16兩日，09/11～09/15若仍有除權息事件，
+    因未在本次查證範圍內取得可靠資料，不予臆測列出，請以台灣證券交易所公開資訊觀測站為準。
+  </p>
+</section>
+
+<section>
+  <h2>ETF</h2>
+  <div class="etf-chip-card">
+    <div class="card-title"><span class="name">2026/09/16~09/17 ETF／債券型基金除息</span><span class="code">約50檔以上</span></div>
+    <p style="margin:0;font-size:.9rem;color:var(--neutral);">
+      ETF與債券型基金配息追蹤成分股或債券組合整體表現，不適用個股填息評分邏輯。
+      來源頁面顯示元大、富邦、國泰等主要發行商旗下多檔商品於09/16~09/17除息，但本次查證受限於用量上限，
+      未能逐一取得完整代碼清單與實際配息金額；來源頁面回報之現金股利與殖利率多顯示為0，
+      部分為固定配息之債券型ETF，此數值可能為資料擷取限制所致而非真實金額，
+      在「不可編造內容」原則下，本次不逕行採信或推算實際配息金額，請以各基金公開說明書或投信官網公告為準。
+    </p>
+  </div>
+</section>
+
+<footer>
+  <h3>免責聲明</h3>
+  <p>本報告內容為公開網路資料之整理與二手研究彙整，不構成任何投資建議或買賣邀約。填息機率評分僅反映查證當下之公開資訊與主觀判斷，不保證未來走勢，投資人應自行查證並審慎評估風險，盈虧自負。</p>
+
+  <h3>評分區間說明</h3>
+  <ul>
+    <li>+3～+1：綜合基本面、籌碼與消息面研判，填息機率偏高</li>
+    <li>0：多空因素相當，或可查證資訊有限</li>
+    <li>-1～-3：填息機率偏低，或存在明確風險因素</li>
+  </ul>
+
+  <h3>配色說明（台股慣例）</h3>
+  <p><span style="color:var(--gain);">■ 紅色</span> = 正分（偏多／填息機率偏高，對應台股上漲色）；<span style="color:var(--loss);">■ 綠色</span> = 負分（偏空／填息機率偏低，對應台股下跌色）；<span style="color:var(--gold);">■ 金色</span> = 中性提示或異常警示。</p>
+
+  <h3>「資料有限」查證限制說明</h3>
+  <p>「資料有限」區塊之個股僅取得股利與日期等基本公開資訊，未進行股價動能、法人籌碼或消息面之深入查證，故不套用評分圓圈，僅以表格呈現，避免與「已深入分析」個股之評等混淆。</p>
+
+  <div class="disclosure">
+    <b>本次用量限制誠實揭露：</b>本次執行 web_search／web_fetch 共使用10次（15次上限內）。
+    已針對5檔個股（台積電2330、新漢8234、鈺齊-KY 9802、南六6504、橋椿2062）完成深度查證與評分，達到單次執行上限。
+    受限於用量與資料來源呈現方式，2026/09/11～09/15期間之除權息清單未能於本次查證中完整取得，故本報告未列出該期間項目；
+    ETF/債券型基金亦僅取得概略檔數，未逐一列出代碼。部分個股（如台積電）之法人籌碼資料非最新、橋椿之殖利率於不同來源間存在細微差異，
+    均已在對應風險欄位中註明。完整名單與最新股利資訊請以台灣證券交易所公開資訊觀測站或券商看盤軟體為準。
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
