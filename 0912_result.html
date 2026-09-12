@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本週除息填息觀察 2026/09/12–09/19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12161C;
+    --card:#1A2028;
+    --border:#2A323D;
+    --gain:#E5484D;   /* 紅：正分 / 台股上漲慣例 */
+    --loss:#2FA875;   /* 綠：負分 / 台股下跌慣例 */
+    --neutral:#8A93A3;
+    --gold:#D4A24C;
+    --text:#EDEFF3;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans TC',sans-serif;
+    line-height:1.6;
+    padding:0 0 60px;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px;}
+  header{
+    padding:48px 20px 32px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    margin-bottom:32px;
+  }
+  header h1{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:2rem;
+    margin:0 0 10px;
+    letter-spacing:.02em;
+  }
+  header .range{
+    color:var(--gold);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.95rem;
+  }
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:44px;
+  }
+  .stat{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 12px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:1.7rem;
+    font-weight:600;
+    display:block;
+  }
+  .stat .label{
+    color:var(--neutral);
+    font-size:.8rem;
+    margin-top:4px;
+    display:block;
+  }
+  .stat.watch .num{color:var(--gold);}
+  .stat.avoid .num{color:var(--loss);}
+  section{margin-bottom:48px;}
+  h2{
+    font-family:'Noto Serif TC',serif;
+    font-size:1.3rem;
+    border-left:4px solid var(--gold);
+    padding-left:12px;
+    margin-bottom:20px;
+  }
+  .cards{display:flex;flex-direction:column;gap:16px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px 24px;
+    display:grid;
+    grid-template-columns:76px 1fr;
+    gap:20px;
+  }
+  .score-circle{
+    width:76px;height:76px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    border:2px solid var(--border);
+    align-self:start;
+  }
+  .score-circle .val{font-size:1.5rem;}
+  .score-circle .tag{font-size:.6rem;color:var(--neutral);margin-top:2px;text-align:center;}
+  .score-circle.pos{border-color:var(--gain);color:var(--gain);}
+  .score-circle.neu{border-color:var(--neutral);color:var(--neutral);}
+  .score-circle.neg{border-color:var(--loss);color:var(--loss);}
+  .card-title{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+  .card-title .name{font-size:1.15rem;font-weight:700;}
+  .card-title .code{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--neutral);
+    font-size:.9rem;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 16px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.82rem;
+    color:var(--neutral);
+    margin-bottom:12px;
+  }
+  .meta-row b{color:var(--text);}
+  .yield-flag{
+    display:inline-block;
+    background:rgba(212,162,76,.15);
+    color:var(--gold);
+    border:1px solid var(--gold);
+    border-radius:6px;
+    padding:1px 8px;
+    font-size:.75rem;
+    margin-left:6px;
+  }
+  .reasons{margin:0 0 10px;padding-left:18px;font-size:.92rem;}
+  .reasons li{margin-bottom:4px;}
+  .risk{
+    font-size:.88rem;
+    color:var(--neutral);
+    border-top:1px dashed var(--border);
+    padding-top:10px;
+  }
+  .risk b{color:var(--loss);}
+  table.lite-table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    font-size:.88rem;
+  }
+  table.lite-table th, table.lite-table td{
+    padding:10px 12px;
+    text-align:left;
+    border-bottom:1px solid var(--border);
+  }
+  table.lite-table th{
+    color:var(--neutral);
+    font-weight:500;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  table.lite-table td.mono, table.lite-table th.mono{font-family:'IBM Plex Mono',monospace;}
+  table.lite-table tr:last-child td{border-bottom:none;}
+  .note-inline{color:var(--neutral);font-size:.78rem;margin-top:10px;}
+  .etf-chip-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 22px;
+  }
+  footer{
+    border-top:1px solid var(--border);
+    margin-top:20px;
+    padding-top:24px;
+    font-size:.8rem;
+    color:var(--neutral);
+  }
+  footer h3{
+    font-size:.85rem;
+    color:var(--text);
+    margin:18px 0 6px;
+  }
+  footer ul{margin:0;padding-left:18px;}
+  footer li{margin-bottom:4px;}
+  .disclosure{
+    background:rgba(212,162,76,.08);
+    border:1px solid var(--gold);
+    border-radius:8px;
+    padding:14px 16px;
+    margin-top:18px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>本週除息填息觀察</h1>
+  <div class="range">資料範圍 2026/09/12 – 2026/09/19｜台灣股市</div>
+</header>
+
+<section class="summary">
+  <div class="stat"><span class="num">4</span><span class="label">已深入分析</span></div>
+  <div class="stat"><span class="num">4</span><span class="label">資料有限</span></div>
+  <div class="stat watch"><span class="num">2</span><span class="label">可留意</span></div>
+  <div class="stat avoid"><span class="num">1</span><span class="label">不建議 / 高風險</span></div>
+</section>
+
+<section>
+  <h2>個股｜已深入分析</h2>
+  <div class="cards">
+
+    <!-- 台積電 2330 -->
+    <div class="card">
+      <div class="score-circle pos"><span class="val">+3</span><span class="tag">填息機率偏高</span></div>
+      <div>
+        <div class="card-title"><span class="name">台積電</span><span class="code">2330</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/16</b>　現金股利 <b>7.00</b>　殖利率 <b>約0.29%</b>
+        </div>
+        <ul class="reasons">
+          <li>採季配息制度，截至目前已配發27次季度股利，其中22次於除息當日即完成填息（秒填息），平均填息天數約1.0天，歷史填息表現極佳。</li>
+          <li>本次殖利率僅約0.29%，除息缺口金額相對股價極小，技術面填息壓力低。</li>
+          <li>晶圓代工龍頭地位穩固，董事會今年已將季配息由6元調升至7元，反映獲利動能無虞。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>主要風險來自半導體景氣循環、地緣政治與大盤系統性回檔等外部總體因素，非個股基本面隱憂；本次查證未取得最新逐日法人籌碼明細。</div>
+      </div>
+    </div>
+
+    <!-- 桂盟 5306 -->
+    <div class="card">
+      <div class="score-circle pos"><span class="val">+1</span><span class="tag">填息機率偏高</span></div>
+      <div>
+        <div class="card-title"><span class="name">桂盟</span><span class="code">5306</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/16</b>　現金股利 <b>1.0746</b>　殖利率 <b>約1.21%</b>
+        </div>
+        <ul class="reasons">
+          <li>自行車／機車鏈條全球龍頭廠，2026年5月營收年增8.73%，公司預估全年營收53.59～54.3億元，優於前一年，基本面穩健。</li>
+          <li>本次殖利率僅約1.21%，除息缺口相對股價很小，技術面填息壓力不大。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>查證期間發現股價於9月初出現MACD低檔背離訊號，且9/4收跌，短線技術面轉趨保守；本次亦未能取得最新三大法人買賣超明細與8月最新月營收，籌碼與最新營收動向尚待觀察，故未給予更高評分。</div>
+      </div>
+    </div>
+
+    <!-- 宏佳騰 1599 -->
+    <div class="card">
+      <div class="score-circle neu"><span class="val">0</span><span class="tag">機會風險相當</span></div>
+      <div>
+        <div class="card-title"><span class="name">宏佳騰</span><span class="code">1599</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/16</b>　現金股利 <b>0.50</b>　殖利率 <b>約2.13%</b>
+        </div>
+        <ul class="reasons">
+          <li>2026年7月營收年增111.45%、月增88.57%，累計營收年增17.9%，旗下Ionex電動機車去年銷售增幅逾2倍為所有品牌之冠，成長動能明確。</li>
+          <li>惟獲利表現與營收成長出現落差：2026年Q2單季EPS轉為虧損0.19元（季減168%），累計上半年EPS僅0.09元、年減115%，顯示營收成長尚未有效轉化為獲利。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>獲利波動大且近期單季轉虧，屬中小型股，本次查證未能取得最新三大法人買賣超數據，填息表現存在不確定性，機會與風險大致相當。</div>
+      </div>
+    </div>
+
+    <!-- 光明 4420 -->
+    <div class="card">
+      <div class="score-circle neg"><span class="val">-2</span><span class="tag">填息機率偏低</span></div>
+      <div>
+        <div class="card-title"><span class="name">光明</span><span class="code">4420</span></div>
+        <div class="meta-row">
+          除息日 <b>2026/09/16</b>　現金股利 <b>2.00</b>　殖利率 <b>約5.10%</b>
+        </div>
+        <ul class="reasons">
+          <li>2026年1～4月累計營收年減5.39%，6月累計營收年減8.23%，營收持續走弱。</li>
+          <li>2026年Q1 EPS僅0.17元，季減43.33%、年減96.52%，獲利較去年同期大幅衰退；相較之下2025全年EPS達5.53元，反映今年獲利明顯回落。</li>
+        </ul>
+        <div class="risk"><b>風險：</b>營收與獲利同步年減，基本面轉弱，填息動能可能不足；本次查證未能取得最新三大法人買賣超明細，籌碼面動向不明，中小型股流動性亦相對有限。</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>個股｜資料有限（未評分）</h2>
+  <table class="lite-table">
+    <thead>
+      <tr>
+        <th class="mono">代碼</th><th>名稱</th><th class="mono">除權息日</th>
+        <th class="mono">現金股利</th><th class="mono">股票股利</th><th class="mono">殖利率</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono">1517</td><td>利奇</td><td class="mono">09/16</td><td class="mono">0.20</td><td class="mono">-</td><td class="mono">1.91%</td></tr>
+      <tr><td class="mono">4533</td><td>協易機</td><td class="mono">09/16</td><td class="mono">0.1776</td><td class="mono">-</td><td class="mono">0.72%</td></tr>
+      <tr><td class="mono">5498</td><td>凱崴</td><td class="mono">09/16</td><td class="mono">0.25</td><td class="mono">-</td><td class="mono">0.49%</td></tr>
+      <tr><td class="mono">6707</td><td>富基電通</td><td class="mono">09/17</td><td class="mono">0.50</td><td class="mono">0.0186</td><td class="mono">1.41%</td></tr>
+    </tbody>
+  </table>
+  <p class="note-inline">
+    上表個股僅取得股利金額、日期與參考殖利率等基本公開資訊，受限於本次用量上限，
+    未能取得除息前近期股價動能、法人籌碼與重大消息，資訊深度不足以評分，故列入本區塊。
+    另依方法論排除現金股利為0之純「權」項目（如禾生技4194，僅配發股票股利10股、現金股利0），未列於任何區塊。
+  </p>
+</section>
+
+<section>
+  <h2>ETF</h2>
+  <table class="lite-table">
+    <thead>
+      <tr>
+        <th class="mono">代碼</th><th>名稱</th><th class="mono">除息日</th><th class="mono">配息金額</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono">00919</td><td>群益台灣精選高息</td><td class="mono">09/16</td><td class="mono">1.10</td></tr>
+      <tr><td class="mono">00921</td><td>兆豐龍頭等權重</td><td class="mono">09/16</td><td class="mono">1.00</td></tr>
+      <tr><td class="mono">00935</td><td>野村臺灣新科技50</td><td class="mono">09/16</td><td class="mono">1.83</td></tr>
+      <tr><td class="mono">00929</td><td>復華台灣科技優息</td><td class="mono">09/17</td><td class="mono">0.38（預估）</td></tr>
+    </tbody>
+  </table>
+  <p class="note-inline">
+    ETF配息追蹤成分股或債券組合整體表現，不適用個股填息評分邏輯，故不套用評分圓圈。
+    受限於本次用量上限，本表未必涵蓋期間內所有除息ETF，完整名單請以證交所或投信公司公告為準。
+  </p>
+</section>
+
+<footer>
+  <h3>免責聲明</h3>
+  <p>本報告內容為公開網路資料之整理與二手研究彙整，不構成任何投資建議或買賣邀約。填息機率評分僅反映查證當下之公開資訊與主觀判斷，不保證未來走勢，投資人應自行查證並審慎評估風險，盈虧自負。</p>
+
+  <h3>評分區間說明</h3>
+  <ul>
+    <li>+3～+1：綜合基本面、籌碼與消息面研判，填息機率偏高</li>
+    <li>0：多空因素相當，或可查證資訊有限</li>
+    <li>-1～-3：填息機率偏低，或存在明確風險因素</li>
+  </ul>
+
+  <h3>配色說明（台股慣例）</h3>
+  <p><span style="color:var(--gain);">■ 紅色</span> = 正分（偏多／填息機率偏高，對應台股上漲色）；<span style="color:var(--loss);">■ 綠色</span> = 負分（偏空／填息機率偏低，對應台股下跌色）；<span style="color:var(--gold);">■ 金色</span> = 中性提示或異常警示。</p>
+
+  <h3>「資料有限」查證限制說明</h3>
+  <p>「資料有限」區塊之個股僅取得股利與日期等基本公開資訊，未完整取得股價動能、法人籌碼或消息面之深入查證，故不套用評分圓圈，僅以表格呈現，避免與「已深入分析」個股之評等混淆。</p>
+
+  <h3>殖利率異常提示</h3>
+  <p>本次查證區間內尚無現金殖利率超過8%之個股，故本次無需列出「高殖利率陷阱」警示。光明（4420）本次殖利率5.10%為區間內最高者，惟未達8%門檻，仍請留意其近期營收與獲利同步走弱之基本面風險（詳見個股卡片）。</p>
+
+  <div class="disclosure">
+    <b>本次用量限制誠實揭露：</b>本次執行 web_search／web_fetch 共使用13次（15次上限內）。
+    第一次以玩股網（wantgoo）查詢除權息預告表時，該次擷取結果誤判本期間無個股除息，
+    經以HiStock除權息日程表交叉查證後予以更正，故除清單抓取外，另多耗用1次查證額度。
+    已針對4檔個股（台積電2330、桂盟5306、宏佳騰1599、光明4420）完成深度查證與評分，
+    未足額查證滿5檔；利奇（1517）、協易機（4533）、凱崴（5498）、富基電通（6707）僅取得基本公開資訊，改列入「資料有限」區塊，未強行評分。
+    ETF區塊僅取得4檔於本期間內確認除息之標的，可能未涵蓋全部除息ETF；
+    禾生技（4194）因屬現金股利為0之純「權」項目，依方法論排除於本報告之外。
+    完整名單與最新股利、籌碼資訊請以台灣證券交易所公開資訊觀測站或券商看盤軟體為準。
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
