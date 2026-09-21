@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>本週除息填息觀察</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#fff; --text:#1f2430; --muted:#7a8194; --line:#e3e6ed;
+    --accent:#d92d3a;        /* 台股慣例：紅 */
+    --accent-soft:#fdecee;
+    --green:#1a8f4d;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#14161b; --card:#1d2027; --text:#e8eaf0; --muted:#8c93a6; --line:#2b2f3a;
+           --accent:#ff5a67; --accent-soft:#3a1d22; --green:#4cc785; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.5}
+  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+  header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  h1{font-size:22px;margin:0}
+  .sub{color:var(--muted);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+  .label{font-size:13px;color:var(--muted);margin:0 0 10px;display:flex;align-items:center;justify-content:space-between}
+
+  /* 年份 */
+  .year{display:flex;align-items:center;gap:10px}
+  .year button{width:30px;height:30px;padding:0;font-size:16px}
+  .year b{min-width:52px;text-align:center;font-size:15px}
+
+  /* 月份 */
+  .months{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  @media (max-width:520px){ .months{grid-template-columns:repeat(4,1fr)} }
+  button{font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);
+         border-radius:10px;padding:9px 0;cursor:pointer;transition:.15s}
+  button:hover{border-color:var(--accent)}
+  .months button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+
+  /* 日曆 */
+  .week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .week div{text-align:center;font-size:12px;color:var(--muted);padding-bottom:4px}
+  .days .blank{visibility:hidden}
+  .days button{padding:10px 0;position:relative;font-variant-numeric:tabular-nums}
+  .days button.has{background:var(--accent-soft);border-color:transparent;font-weight:600}
+  .days button.has::after{content:"";position:absolute;left:50%;bottom:4px;width:5px;height:5px;margin-left:-2.5px;
+                          border-radius:50%;background:var(--accent)}
+  .days button.none{color:var(--muted);opacity:.55}
+  .days button.today{outline:2px solid var(--green);outline-offset:-2px}
+  .days button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .days button.on::after{background:#fff}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:12px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+  /* 檢視區 */
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .bar .url{font-size:12px;color:var(--muted);word-break:break-all}
+  .bar a{color:var(--accent);text-decoration:none;font-size:13px;white-space:nowrap}
+  iframe{width:100%;height:80vh;min-height:520px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+  .err{display:none;background:var(--accent-soft);color:var(--accent);border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📈 本週除息填息觀察</h1>
+    <span class="sub" id="today"></span>
+  </header>
+
+  <div class="card">
+    <div class="label"><span>① 選擇月份</span>
+      <div class="year"><button id="yPrev" aria-label="上一年">‹</button><b id="yLabel"></b><button id="yNext" aria-label="下一年">›</button></div>
+    </div>
+    <div class="months" id="months"></div>
+  </div>
+
+  <div class="card">
+    <div class="label"><span>② 選擇日期（<span id="mLabel"></span>）</span></div>
+    <div class="week"><div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div></div>
+    <div class="days" id="days"></div>
+    <div class="legend">
+      <span><i style="background:var(--accent-soft);border:1px solid var(--accent)"></i>有分析頁面</span>
+      <span><i style="background:var(--card);border:1px solid var(--line)"></i>尚無頁面 / 未偵測</span>
+      <span><i style="outline:2px solid var(--green);outline-offset:-2px"></i>今天</span>
+    </div>
+  </div>
+
+  <div class="card" id="viewer">
+    <div class="empty" id="empty">請先選擇月份，再點選要查看的日期</div>
+    <div id="frameBox" style="display:none">
+      <div class="bar">
+        <div><b id="vTitle"></b><div class="url" id="vUrl"></div></div>
+        <a id="vOpen" target="_blank" rel="noopener">在新分頁開啟 ↗</a>
+      </div>
+      <div class="err" id="err">找不到這一天的頁面，請確認檔案是否已上傳。</div>
+      <iframe id="frame" title="除息填息觀察"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== 設定區（只需要改這裡） =====
+   BASE：結果頁所在的網址前綴。留空 "" 代表與本檔案放在同一個資料夾。
+   fileName：日期 → 檔名 的規則。目前為 MMDD_result.html（例如 0920_result.html）。 */
+const BASE = "";  // 例如 "https://kevinhuang09.github.io/Taiwan_stock_new/"
+const fileName = (m, d) => String(m).padStart(2,"0") + String(d).padStart(2,"0") + "_result.html";
+
+/* ===== 以下不用改 ===== */
+const now = new Date();
+let year = now.getFullYear(), month = now.getMonth() + 1, picked = null;
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,"0");
+
+$("today").textContent = `今天 ${now.getFullYear()}/${pad(now.getMonth()+1)}/${pad(now.getDate())}`;
+
+function buildMonths(){
+  const box = $("months"); box.innerHTML = "";
+  for(let m=1;m<=12;m++){
+    const b = document.createElement("button");
+    b.textContent = m + "月";
+    if(m===month) b.classList.add("on");
+    b.onclick = () => { month = m; picked = null; render(); };
+    box.appendChild(b);
+  }
+}
+
+async function exists(url){
+  try{
+    const r = await fetch(url, {method:"HEAD", cache:"no-store"});
+    return r.ok;
+  }catch(e){ return null; }   // file:// 或跨網域 → 無法偵測
+}
+
+function buildDays(){
+  $("yLabel").textContent = year;
+  $("mLabel").textContent = `${year} 年 ${month} 月`;
+  const box = $("days"); box.innerHTML = "";
+  const first = new Date(year, month-1, 1).getDay();
+  const total = new Date(year, month, 0).getDate();
+  for(let i=0;i<first;i++){ const s=document.createElement("div"); s.className="blank"; box.appendChild(s); }
+  for(let d=1; d<=total; d++){
+    const b = document.createElement("button");
+    b.textContent = d; b.dataset.d = d;
+    if(year===now.getFullYear() && month===now.getMonth()+1 && d===now.getDate()) b.classList.add("today");
+    if(picked===d) b.classList.add("on");
+    b.onclick = () => openDay(d);
+    box.appendChild(b);
+  }
+  // 偵測哪些日期已有頁面（僅在同網域下有效）
+  const token = year+"-"+month; buildDays.token = token;
+  for(let d=1; d<=total; d++){
+    exists(BASE + fileName(month,d)).then(ok=>{
+      if(buildDays.token!==token || ok===null) return;
+      const btn = box.querySelector(`button[data-d="${d}"]`);
+      if(btn) btn.classList.add(ok ? "has" : "none");
+    });
+  }
+}
+
+function openDay(d){
+  picked = d;
+  document.querySelectorAll(".days button").forEach(b=>b.classList.toggle("on", +b.dataset.d===d));
+  const url = BASE + fileName(month, d);
+  $("empty").style.display = "none";
+  $("frameBox").style.display = "block";
+  $("vTitle").textContent = `${year}/${pad(month)}/${pad(d)} 除息填息觀察`;
+  $("vUrl").textContent = url;
+  $("vOpen").href = url;
+  $("err").style.display = "none";
+  const f = $("frame");
+  f.onload = () => {
+    try{ // 同網域時偵測 404
+      const t = f.contentDocument && f.contentDocument.title || "";
+      if(/404|not found/i.test(t)) $("err").style.display = "block";
+    }catch(e){}
+  };
+  f.src = url;
+  history.replaceState(null, "", "#" + pad(month) + pad(d));
+  $("viewer").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function render(){ buildMonths(); buildDays(); }
+
+$("yPrev").onclick = () => { year--; picked=null; buildDays(); };
+$("yNext").onclick = () => { year++; picked=null; buildDays(); };
+
+// 支援 index.html#0920 直接開啟指定日期
+const h = location.hash.replace("#","");
+if(/^\d{4}$/.test(h)){
+  const m = +h.slice(0,2), d = +h.slice(2);
+  if(m>=1 && m<=12 && d>=1 && d<=31){ month = m; render(); openDay(d); }
+  else render();
+}else render();
+</script>
+</body>
+</html>
