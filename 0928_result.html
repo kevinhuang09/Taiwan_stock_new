@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本週除息填息觀察 2026/09/28-10/05</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12161C;
+    --card: #1A2028;
+    --border: #2A323D;
+    --gain: #E5484D;   /* 正分／紅漲 */
+    --loss: #2FA875;   /* 負分／綠跌 */
+    --neutral: #8A93A3;
+    --gold: #D4A24C;
+    --text-main: #EDEFF2;
+    --text-sub: #B4BCC8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1.6;
+    padding: 32px 16px 64px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header {
+    text-align: center;
+    padding: 24px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 8px;
+    letter-spacing: 1px;
+  }
+  header .date-range {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--gold);
+    font-size: 15px;
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 8px;
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .stat .label { font-size: 12.5px; color: var(--text-sub); margin-top: 4px; }
+  .stat.gain .num { color: var(--gain); }
+  .stat.loss .num { color: var(--loss); }
+  .stat.neutral .num { color: var(--neutral); }
+  .stat.gold .num { color: var(--gold); }
+
+  section { margin-bottom: 40px; }
+  section > h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 19px;
+    font-weight: 700;
+    border-left: 4px solid var(--gold);
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-title { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .card-title .name { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 18px; }
+  .card-title .ticker { font-family: 'IBM Plex Mono', monospace; color: var(--text-sub); font-size: 13.5px; }
+  .card-meta { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-sub); text-align: right; }
+
+  .score-circle {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600; font-size: 17px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .score-circle.pos { color: var(--gain); border-color: var(--gain); background: rgba(229,72,77,0.08); }
+  .score-circle.neg { color: var(--loss); border-color: var(--loss); background: rgba(47,168,117,0.08); }
+  .score-circle.zero { color: var(--neutral); border-color: var(--neutral); background: rgba(138,147,163,0.08); }
+
+  .card h4 { margin: 14px 0 6px; font-size: 13.5px; color: var(--text-sub); font-weight: 500; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .card ul li { margin-bottom: 4px; }
+  .reasons li::marker { color: var(--gold); }
+  .risk-box {
+    margin-top: 12px;
+    background: rgba(212,162,76,0.08);
+    border: 1px solid rgba(212,162,76,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+  .risk-box b { color: var(--gold); }
+  .trap-flag {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12.5px;
+    background: rgba(229,72,77,0.15);
+    color: var(--gain);
+    border: 1px solid var(--gain);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+
+  .lite-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .lite-table th, .lite-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .lite-table th {
+    color: var(--text-sub);
+    font-weight: 500;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.02);
+  }
+  .lite-table td.num, .lite-table th.num { font-family: 'IBM Plex Mono', monospace; }
+  .lite-table tr:last-child td { border-bottom: none; }
+  .lite-note {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  .empty-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  footer h3 {
+    font-size: 13.5px;
+    color: var(--text-sub);
+    margin: 18px 0 6px;
+    font-weight: 700;
+  }
+  footer p { margin: 4px 0; }
+  .legend-row { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>本週除息填息觀察</h1>
+    <div class="date-range">資料範圍：2026/09/28 — 2026/10/05</div>
+  </header>
+
+  <div class="summary">
+    <div class="stat gold"><div class="num">5</div><div class="label">已深入分析</div></div>
+    <div class="stat neutral"><div class="num">4</div><div class="label">資料有限</div></div>
+    <div class="stat gain"><div class="num">2</div><div class="label">可留意（正分）</div></div>
+    <div class="stat loss"><div class="num">1</div><div class="label">不建議（負分）</div></div>
+  </div>
+
+  <section>
+    <h2>個股｜已深入分析</h2>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="name">泰銘</span><span class="ticker">9927.TW</span>
+        </div>
+        <div class="score-circle pos">+1</div>
+      </div>
+      <div class="card-meta">除息日 2026/10/01　現金股利 5.00 元　殖利率約 7.12%</div>
+      <h4>評分理由</h4>
+      <ul class="reasons">
+        <li>股價約70元，近2日連漲(+0.72%)，短期動能穩定</li>
+        <li>2026年8月營收7.90億元，年增25.59%（月減20.84%，係7月基期較高所致），1-8月累計營收65.36億元、年增23.17%，全年營收維持雙位數成長</li>
+        <li>2026年H1累計EPS 2.27元，較去年同期年增約80%，惟現金股利高達5元，以目前股價估算殖利率約7.12%，填息所需漲幅相對較大</li>
+      </ul>
+      <div class="risk-box"><b>風險提示：</b>殖利率約7.12%已屬偏高族群但未達8%警戒線；8月營收較7月明顯月減，配息金額偏大，填息所需漲幅約7%，需留意短期能否消化。本次因用量限制未取得最新法人籌碼與Q3訂單能見度，建議除息前自行複核最新股價與殖利率。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="name">中環</span><span class="ticker">2323.TW</span>
+        </div>
+        <div class="score-circle pos">+2</div>
+      </div>
+      <div class="card-meta">除息日 2026/10/01　現金股利 0.20 元　殖利率約 1.85%</div>
+      <h4>評分理由</h4>
+      <ul class="reasons">
+        <li>股價近期於10.7-11.45元區間窄幅震盪，波動度低</li>
+        <li>2026年8月營收7.1億元，月增10.12%、年增20.09%，創五年單月營收同期新高；1-8月累計營收53.1億元、年增14.78%</li>
+        <li>2026年Q2單季EPS 1.4元，年增154.55%；現金股利僅0.2元，殖利率約1.85%，配息金額小，填息所需漲幅有限</li>
+      </ul>
+      <div class="risk-box"><b>風險提示：</b>現金殖利率僅約1.85%，非高殖利率陷阱類型；惟H1累計EPS年增率數字（-404.35%）與各季度數字之間存在明顯矛盾（研判為由虧轉盈之基期效應或資料誤植），本次不採信該矛盾數字，僅以Q2單季數字為準。本次因用量限制未取得最新法人籌碼與下半年展望，建議除息前自行查證。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="name">大城地產</span><span class="ticker">6171.TWO</span>
+        </div>
+        <div class="score-circle zero">0</div>
+      </div>
+      <div class="card-meta">除息日 2026/10/02　現金股利 2.00 元　殖利率約 7.58%（依股價約26.4元估算）</div>
+      <h4>評分理由</h4>
+      <ul class="reasons">
+        <li>股價約24-28元區間震盪，不同資料來源股價落點略有差異</li>
+        <li>2026年Q1單季EPS僅0.08元，獲利水準偏低，惟公司已連續10年發放股利，近5年平均現金殖利率約3.39%，具一定配息穩定性</li>
+        <li>2026年5月董事會通過台中市南屯區鎮福段工程發包（合約金額8.72億元），屬營造類股常見之認列遞延特性，短期營收/獲利波動大，不易以單季數字判斷全年獲利趨勢</li>
+      </ul>
+      <div class="risk-box"><b>風險提示：</b>殖利率約7.58%已屬偏高族群，雖未達8%強制警示門檻，仍建議留意是否為非常態獲利或一次性配息；營造類股獲利認列具高度批次性，Q1 EPS僅0.08元與2元股利明顯不成比例，需留意股利來源是否主要來自保留盈餘而非當期獲利。本次因用量限制未取得最新法人籌碼，建議除息前自行複核。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="name">達爾膚</span><span class="ticker">6523.TWO</span>
+        </div>
+        <div class="score-circle zero">0</div>
+      </div>
+      <div class="card-meta">除息日 2026/10/01　現金股利 2.00 元　殖利率清單標示約 2.23%</div>
+      <h4>評分理由</h4>
+      <ul class="reasons">
+        <li>股價約117.5元，近期連3漲後拉回(-0.88%)，短期呈現漲多拉回態勢</li>
+        <li>2026年Q1營收2.76億元、稅後淨利8,489萬元，獲利率約30%，獲利體質尚屬健全</li>
+        <li>2026年4月營收6,105.5萬元、年減8.15%，為查證所得最新月度數據，顯示營收成長動能放緩；現金股利2元、殖利率約2.23%，配息金額相對股價占比不高，填息所需漲幅有限</li>
+      </ul>
+      <div class="risk-box"><b>風險提示：</b>本次查證股價(約117.5元)與清單標示殖利率(2.23%)所隱含股價(約89.7元)有明顯落差，無法排除股價資料來源不一致或除權息清單資料已過時，建議除息前務必自行複核最新股價與實際殖利率；另4月營收年減8.15%，因用量限制未能取得5-8月最新數據以確認營收趨勢是否延續或反轉。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="name">力麒</span><span class="ticker">5512.TWO</span>
+        </div>
+        <div class="score-circle neg">-1</div>
+      </div>
+      <div class="card-meta">除息日 2026/10/05　現金股利 0.10 元　殖利率約 1.30%</div>
+      <h4>評分理由</h4>
+      <ul class="reasons">
+        <li>股價約7.88-7.99元，近期下跌(-0.63%)，股價維持低檔</li>
+        <li>2026年Q1 EPS僅0.05元，季減62%、年減29%，獲利能力明顯轉弱；2025全年EPS僅0.16元，長期獲利水準偏低</li>
+        <li>2026年7月營收7.62億元，月增64.85%、年增89.96%，惟營造類股單月營收波動本屬常態，累計營收年增僅5.2%，尚不足以確認基本面全面改善</li>
+      </ul>
+      <div class="risk-box"><b>風險提示：</b>EPS連續季減、年減，獲利動能明顯轉弱，與單月營收大增呈現背離，需留意獲利與營收認列時點是否錯位；現金股利僅0.1元、殖利率約1.30%，配息金額雖小、填息門檻低，但獲利體質疲弱仍為主要風險來源。本次因用量限制未取得最新法人籌碼與財務結構相關消息，建議除息前自行查證。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>個股｜資料有限</h2>
+    <table class="lite-table">
+      <thead>
+        <tr>
+          <th>代號</th><th>名稱</th><th>除息日期</th><th class="num">現金股利</th><th class="num">殖利率</th><th>備註</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>7631</td><td>聚賢研發-創</td><td>2026/09/29</td><td class="num">0.80 元</td><td class="num">0.58%</td>
+          <td>創新板個股，受深入查證上限（5檔）限制，僅取得除權息清單基本資料，未進行深入查證</td>
+        </tr>
+        <tr>
+          <td>2109</td><td>華豐</td><td>2026/09/29</td><td class="num">0.50 元</td><td class="num">3.33%</td>
+          <td>受深入查證上限（5檔）限制，僅取得除權息清單基本資料，未進行深入查證</td>
+        </tr>
+        <tr>
+          <td>8440</td><td>綠電</td><td>2026/09/30</td><td class="num">0.35 元</td><td class="num">1.73%</td>
+          <td>受深入查證上限（5檔）限制，僅取得除權息清單基本資料，未進行深入查證</td>
+        </tr>
+        <tr>
+          <td>1784</td><td>訊聯</td><td>2026/10/01</td><td class="num">0.881 元</td><td class="num">1.44%</td>
+          <td>受深入查證上限（5檔）限制，僅取得除權息清單基本資料，未進行深入查證</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="lite-note">殖利率為除權息清單來源提供之估算值，非本次逐檔複核結果，請於除息前自行至券商或官方管道複核最新股價與股利資訊。本期清單擷取主要來源為HiStock除權息日程表，未涵蓋之個股可能因清單來源本身限制而未被納入，建議另行參考台灣證券交易所官網確認完整名單。</div>
+  </section>
+
+  <section>
+    <h2>ETF</h2>
+    <div class="empty-note">本期間（2026/09/28-10/05）查證所得之除權息清單中未發現ETF／債券基金除息項目。</div>
+  </section>
+
+  <footer>
+    <h3>免責聲明</h3>
+    <p>本頁面內容僅為資訊整理與觀察筆記，依據公開網路資料彙整，不構成任何投資建議或買賣邀約。個股填息與否受市場、產業、總經環境等多重因素影響，過去表現不代表未來結果，投資人應自行查證並審慎評估風險，投資前請諮詢專業意見。</p>
+
+    <h3>評分區間說明</h3>
+    <p>評分僅適用於「已深入分析」個股，區間為 -3 至 +3：+1～+3 表示填息機率相對偏高；0 表示機會與風險相當或資料仍有不足；-1～-3 表示填息機率相對偏低或存在明確風險因素。「資料有限」與 ETF 項目不進行評分。</p>
+
+    <h3>紅漲綠跌配色說明</h3>
+    <div class="legend-row">
+      <span><span class="legend-dot" style="background:var(--gain);"></span>紅色＝正分（台股慣例紅漲）</span>
+      <span><span class="legend-dot" style="background:var(--loss);"></span>綠色＝負分（台股慣例綠跌）</span>
+      <span><span class="legend-dot" style="background:var(--neutral);"></span>灰色＝中性（0 分或未評分）</span>
+    </div>
+
+    <h3>資料有限查證限制說明</h3>
+    <p>本報告因每日自動化執行之用量控管，最多僅對 5 檔個股進行「已深入分析」等級之查證（每檔最多 2 次網路搜尋），其餘個股一律歸類為「資料有限」，不編造未經查證之分析內容。</p>
+
+    <h3>本次用量揭露</h3>
+    <p>抓取除權息清單階段共使用2次搜尋＋1次網頁擷取（HiStock除權息日程表），取得2026/09/28-10/05期間共9檔普通股項目，未發現ETF／債券基金項目。依「中大型知名股＞明確消息面＞殖利率極端偏高或異常＞使用者指定」原則，選出5檔進行深入查證：泰銘、中環、大城地產、達爾膚、力麒（每檔各2次搜尋，合計10次搜尋），其餘4檔（聚賢研發-創、華豐、綠電、訊聯）因已達5檔上限，歸類為「資料有限」，僅呈現清單基本資料。整體網路查詢（搜尋＋擷取）共13次，在15次上限內完成。</p>
+  </footer>
+
+</div>
+</body>
+</html>
