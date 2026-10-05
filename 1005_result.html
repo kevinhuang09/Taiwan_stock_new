@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本週除息填息觀察 2026/10/05-10/12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12161C;
+    --card: #1A2028;
+    --border: #2A323D;
+    --gain: #E5484D;   /* 正分／紅漲 */
+    --loss: #2FA875;   /* 負分／綠跌 */
+    --neutral: #8A93A3;
+    --gold: #D4A24C;
+    --text-main: #EDEFF2;
+    --text-sub: #B4BCC8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1.6;
+    padding: 32px 16px 64px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header {
+    text-align: center;
+    padding: 24px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 8px;
+    letter-spacing: 1px;
+  }
+  header .date-range {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--gold);
+    font-size: 15px;
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 8px;
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .stat .label { font-size: 12.5px; color: var(--text-sub); margin-top: 4px; }
+  .stat.gain .num { color: var(--gain); }
+  .stat.loss .num { color: var(--loss); }
+  .stat.neutral .num { color: var(--neutral); }
+  .stat.gold .num { color: var(--gold); }
+
+  section { margin-bottom: 40px; }
+  section > h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 19px;
+    font-weight: 700;
+    border-left: 4px solid var(--gold);
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-title { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .card-title .name { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 18px; }
+  .card-title .ticker { font-family: 'IBM Plex Mono', monospace; color: var(--text-sub); font-size: 13.5px; }
+  .card-meta { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-sub); text-align: right; }
+
+  .score-circle {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600; font-size: 17px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .score-circle.pos { color: var(--gain); border-color: var(--gain); background: rgba(229,72,77,0.08); }
+  .score-circle.neg { color: var(--loss); border-color: var(--loss); background: rgba(47,168,117,0.08); }
+  .score-circle.zero { color: var(--neutral); border-color: var(--neutral); background: rgba(138,147,163,0.08); }
+
+  .card h4 { margin: 14px 0 6px; font-size: 13.5px; color: var(--text-sub); font-weight: 500; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .card ul li { margin-bottom: 4px; }
+  .reasons li::marker { color: var(--gold); }
+  .risk-box {
+    margin-top: 12px;
+    background: rgba(212,162,76,0.08);
+    border: 1px solid rgba(212,162,76,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+  .risk-box b { color: var(--gold); }
+  .trap-flag {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12.5px;
+    background: rgba(229,72,77,0.15);
+    color: var(--gain);
+    border: 1px solid var(--gain);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+
+  .lite-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .lite-table th, .lite-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .lite-table th {
+    color: var(--text-sub);
+    font-weight: 500;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.02);
+  }
+  .lite-table td.num, .lite-table th.num { font-family: 'IBM Plex Mono', monospace; }
+  .lite-table tr:last-child td { border-bottom: none; }
+  .lite-note {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  .empty-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  footer h3 {
+    font-size: 13.5px;
+    color: var(--text-sub);
+    margin: 18px 0 6px;
+    font-weight: 700;
+  }
+  footer p { margin: 4px 0; }
+  .legend-row { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>本週除息填息觀察</h1><div class="date-range">資料範圍：2026/10/05 — 2026/10/12</div></header>
+  <div class="summary">
+    <div class="stat gold"><div class="num">5</div><div class="label">已深入分析</div></div>
+    <div class="stat neutral"><div class="num">0</div><div class="label">資料有限</div></div>
+    <div class="stat gain"><div class="num">2</div><div class="label">可留意</div></div>
+    <div class="stat loss"><div class="num">1</div><div class="label">不建議</div></div>
+  </div>
+  <section><h2>個股｜已深入分析</h2>
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><span class="name">競國</span><span class="ticker">6108</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息日 10/07<br>現金股利 1.00 元</div><div class="score-circle pos">+2</div></div>
+    </div>
+    <h4>查證事實</h4><ul><li>9/30 收盤 25.05 元，預估參考價 24.05 元，殖利率約 4%（有來源列 6.37%，與股價換算不符，不採用）；近一週均價約 24.57 元</li><li>近五年平均填息率 100%、平均填息天數 44 天（單一來源）</li><li>2026 Q2 營收 14.08 億元，季增 40%；單季毛利率轉正至 10.2%，Q2 EPS 1.4 元</li><li>1-8 月累計營收 36.63 億元，年增 31.2%；8 月年增 45.69%；記憶體模組板占比升至 43.1%</li><li>未取得近期法人買賣超數據</li></ul>
+    <h4>評分理由</h4><ul class="reasons"><li>營收與單季獲利明顯轉強（正向）</li><li>殖利率約 4%、歷史填息率佳（正向）</li><li>股價近一年均價 17.41 元，現價已大幅高於均價，且缺法人資料，故評 +2 而非更高</li></ul>
+    <div class="risk-box"><b>風險：</b>股價相對一年均價已有明顯漲幅，除息前後可能獲利了結；歷史平均填息需 44 天，非短線必然填息；Q1 曾虧損，獲利基期仍低。</div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><span class="name">東森</span><span class="ticker">2614</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除權息日 10/06<br>現金 0.40 元＋股票 0.80 元</div><div class="score-circle zero">0</div></div>
+    </div>
+    <h4>查證事實</h4><ul><li>9/29 收盤 18.85 元，預估參考價 17.08 元，權息值合計 1.2 元（約 6.4%，以參考價差計）；現金殖利率約 2.12%</li><li>近五年填息機率 50%（本次來源；先前週報曾引用 100%，來源不一致，請自行查證）</li><li>2026 Q2 EPS 0.53 元；Q1~Q2 累計 EPS 0.83 元，年減 32.05%</li><li>8 月營收 4.44 億元，年增 -6.45%；1-8 月累計 34.52 億元，年減 3.74%</li><li>董事會決議現金增資 1.25 億股，暫訂每股 16 元</li></ul>
+    <h4>評分理由</h4><ul class="reasons"><li>含配股使填息所需漲幅偏高（負向）</li><li>營收年減、累計 EPS 年減，且現增造成股本稀釋（負向）</li><li>現增價 16 元低於現價，但填息率 50%，機會與風險相當，評 0</li></ul>
+    <div class="risk-box"><b>風險：</b>填息門檻高於現金殖利率所示；現增稀釋與營收衰退可能壓抑股價；未取得法人籌碼。</div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><span class="name">台鎔科技</span><span class="ticker">6947</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息日 10/07<br>現金股利 0.53 元</div><div class="score-circle pos">+1</div></div>
+    </div>
+    <h4>查證事實</h4><ul><li>9/30 收盤 68.40 元，預估參考價 67.87 元，殖利率約 0.78%</li><li>近五年填息機率 100%（單一來源）</li><li>Q2 營收 4.40 億元，年增 36.87%；Q2 EPS 0.85 元，累計 EPS 1.44 元</li><li>1~7 月營收年增約 46%～75%（逐月）；2026 上半年營收累計年增 71.42%</li><li>財報狗摘要列最新股價 90.33 元，與 9/30 收盤 68.40 元差距甚大，無法確認</li></ul>
+    <h4>評分理由</h4><ul class="reasons"><li>股利極小，填息只需約 0.8% 漲幅（正向）</li><li>營收與獲利成長強勁（正向）</li><li>股價資料互相矛盾且缺法人籌碼，保守評 +1</li></ul>
+    <div class="risk-box"><b>風險：</b>股價來源矛盾，評分以 9/30 收盤價為準；歷史填息資料僅單一來源；小型股波動大，請自行核對即時股價。</div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><span class="name">振宇五金</span><span class="ticker">2947</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息日 10/07<br>現金股利 1.00 元</div><div class="score-circle zero">0</div></div>
+    </div>
+    <h4>查證事實</h4><ul><li>董事會 9/17 決議 115 年上半年現金股利 1.00 元，發放日 11/4</li><li>2026 上半年營收 11.88 億元，年增 7.14%；EPS 1.78 元，年增 9%；Q2 EPS 0.93 元</li><li>1-8 月累計營收 16.18 億元，年增 6.90%；7 月受颱風及北部展店帶動</li><li>法人估今年 EPS 約 3.3 元</li><li>本次未取得可靠的最新股價與填息率（搜尋結果多為往年除息資料），不予引用</li></ul>
+    <h4>評分理由</h4><ul class="reasons"><li>獲利穩定小幅成長、法人預期 EPS 優於去年（小幅正向）</li><li>缺最新股價動能、填息歷史與法人籌碼（資料不足）</li><li>綜合機會與風險相當，評 0</li></ul>
+    <div class="risk-box"><b>風險：</b>最新股價與填息歷史未能確認；成長幅度溫和，填息速度可能不穩。</div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><span class="name">精華</span><span class="ticker">1565</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息日 10/12<br>現金股利 5.80 元</div><div class="score-circle neg">-2</div></div>
+    </div>
+    <h4>查證事實</h4><ul><li>股價約 99～100 元，現金殖利率約 5.7%～5.8%，發放日 10/30</li><li>近五年填息機率 0%（單一來源）</li><li>現金股利由 2024 年 9.50 元降至 5.80 元，配息連年下滑</li><li>2026 年 8 月營收 3.02 億元，年減 12.47%；1-8 月累計 23.86 億元，年減 16.33%，累計營收為 15 年新低</li><li>2026 Q2 EPS 1.61 元，年增 182%；上半年累計 EPS 3.0 元，年減 25%；2025 全年 EPS 9.03 元</li><li>未取得近期法人買賣超數據</li></ul>
+    <h4>評分理由</h4><ul class="reasons"><li>營收連續衰退、上半年累計 EPS 年減（負向）</li><li>歷史填息率 0%（負向）</li><li>Q2 單季 EPS 年增、殖利率尚可（小幅正向），整體偏負，評 −2</li></ul>
+    <div class="risk-box"><b>風險：</b>營收創新低、獲利動能不穩；歷史填息紀錄差；除息日為 10/12，已在本週統計區間最後一天，請留意。</div>
+  </div>
+  </section>
+
+  <section><h2>個股｜資料有限</h2>
+  <div class="empty-note">本週有現金股利的個股僅 5 檔，皆已深入分析，無資料有限個股。5512 力麒列為無股利，已排除。</div>
+  </section>
+
+  <section><h2>ETF</h2>
+  <div class="card">
+    <div class="card-head"><div class="card-title"><span class="name">本週除息 ETF</span></div></div>
+    <ul>
+      <li>10/05：00939 統一台灣高息動能 0.13 元；債券 ETF 00950B 0.06、00966B 0.07、00984B 0.08、00983B 0.06、00959B 0.05 元</li>
+      <li>10/07：00940、00946、00953B（清單顯示無配息金額）</li>
+    </ul>
+    <div class="risk-box"><b>提醒：</b>ETF 不評分。ETF 配息可能含本金返還，不等同獲利，請自行查閱配息組成並以投信公告為準；金額取自單一清單來源，未交叉驗證。</div>
+  </div>
+  </section>
+  <footer>
+    <h3>免責聲明</h3>
+    <p>本頁面內容僅為資訊整理與觀察筆記，依據公開網路資料彙整，不構成任何投資建議或買賣邀約。個股填息與否受市場、產業、總經環境等多重因素影響，過去表現不代表未來結果，投資人應自行查證並審慎評估風險，投資前請諮詢專業意見。</p>
+
+    <h3>評分區間說明</h3>
+    <p>評分僅適用於「已深入分析」個股，區間為 -3 至 +3：+1～+3 表示填息機率相對偏高；0 表示機會與風險相當或資料仍有不足；-1～-3 表示填息機率相對偏低或存在明確風險因素。「資料有限」與 ETF 項目不進行評分。</p>
+
+    <h3>紅漲綠跌配色說明</h3>
+    <div class="legend-row">
+      <span><span class="legend-dot" style="background:var(--gain);"></span>紅色＝正分（台股慣例紅漲）</span>
+      <span><span class="legend-dot" style="background:var(--loss);"></span>綠色＝負分（台股慣例綠跌）</span>
+      <span><span class="legend-dot" style="background:var(--neutral);"></span>灰色＝中性（0 分或未評分）</span>
+    </div>
+
+    <h3>資料有限查證限制說明</h3>
+    <p>本報告因每日自動化執行之用量控管，最多僅對 5 檔個股進行「已深入分析」等級之查證（每檔最多 2 次網路搜尋），其餘個股一律歸類為「資料有限」，不編造未經查證之分析內容。除權息清單來自搜尋摘要，可能不完整，各來源數字亦可能不一致。</p>
+
+    <h3>本次用量揭露</h3>
+    <p>清單階段使用 1 次搜尋＋1 次網頁擷取；個股查證使用 10 次搜尋（競國、東森、台鎔科技、振宇五金、精華各 2 次）。整體共 12 次，在 15 次上限內。本次實際深入評分 5 檔（上限 5 檔）。各檔填息率多為單一來源，且多數未取得法人籌碼。本次無殖利率超過 8% 之個股，未觸發「利率陷阱」提示。</p>
+  </footer>
+
+</div>
+</body>
+</html>
