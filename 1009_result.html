@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本週除息填息觀察 2026/10/09-10/16</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12161C;
+    --card: #1A2028;
+    --border: #2A323D;
+    --gain: #E5484D;   /* 正分／紅漲 */
+    --loss: #2FA875;   /* 負分／綠跌 */
+    --neutral: #8A93A3;
+    --gold: #D4A24C;
+    --text-main: #EDEFF2;
+    --text-sub: #B4BCC8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1.6;
+    padding: 32px 16px 64px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header {
+    text-align: center;
+    padding: 24px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 8px;
+    letter-spacing: 1px;
+  }
+  header .date-range {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--gold);
+    font-size: 15px;
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 8px;
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .stat .label { font-size: 12.5px; color: var(--text-sub); margin-top: 4px; }
+  .stat.gain .num { color: var(--gain); }
+  .stat.loss .num { color: var(--loss); }
+  .stat.neutral .num { color: var(--neutral); }
+  .stat.gold .num { color: var(--gold); }
+
+  section { margin-bottom: 40px; }
+  section > h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 19px;
+    font-weight: 700;
+    border-left: 4px solid var(--gold);
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-title { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .card-title .name { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 18px; }
+  .card-title .ticker { font-family: 'IBM Plex Mono', monospace; color: var(--text-sub); font-size: 13.5px; }
+  .card-meta { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-sub); text-align: right; }
+
+  .score-circle {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600; font-size: 17px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .score-circle.pos { color: var(--gain); border-color: var(--gain); background: rgba(229,72,77,0.08); }
+  .score-circle.neg { color: var(--loss); border-color: var(--loss); background: rgba(47,168,117,0.08); }
+  .score-circle.zero { color: var(--neutral); border-color: var(--neutral); background: rgba(138,147,163,0.08); }
+
+  .card h4 { margin: 14px 0 6px; font-size: 13.5px; color: var(--text-sub); font-weight: 500; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .card ul li { margin-bottom: 4px; }
+  .reasons li::marker { color: var(--gold); }
+  .risk-box {
+    margin-top: 12px;
+    background: rgba(212,162,76,0.08);
+    border: 1px solid rgba(212,162,76,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+  .risk-box b { color: var(--gold); }
+  .trap-flag {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12.5px;
+    background: rgba(229,72,77,0.15);
+    color: var(--gain);
+    border: 1px solid var(--gain);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+
+  .lite-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .lite-table th, .lite-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .lite-table th {
+    color: var(--text-sub);
+    font-weight: 500;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.02);
+  }
+  .lite-table td.num, .lite-table th.num { font-family: 'IBM Plex Mono', monospace; }
+  .lite-table tr:last-child td { border-bottom: none; }
+  .lite-note {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  .empty-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  footer h3 {
+    font-size: 13.5px;
+    color: var(--text-sub);
+    margin: 18px 0 6px;
+    font-weight: 700;
+  }
+  footer p { margin: 4px 0; }
+  .legend-row { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>本週除息填息觀察</h1><div class="date-range">資料範圍：2026/10/09 — 2026/10/16</div></header>
+  <div class="summary">
+    <div class="stat gold"><div class="num">1</div><div class="label">已深入分析</div></div>
+    <div class="stat neutral"><div class="num">1</div><div class="label">資料有限</div></div>
+    <div class="stat gain"><div class="num">0</div><div class="label">可留意</div></div>
+    <div class="stat loss"><div class="num">1</div><div class="label">不建議</div></div>
+  </div>
+
+  <section>
+    <h2>個股｜已深入分析</h2>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="name">精華</span><span class="ticker">1565</span></div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="card-meta">除息日 2026/10/12<br>現金股利 5.8 元｜殖利率約 6.0%</div>
+          <div class="score-circle neg">-1</div>
+        </div>
+      </div>
+      <h4>評分理由</h4>
+      <ul class="reasons">
+        <li>營收持續衰退：2026/8 營收 3.02 億元，年減 12.47%；1–8 月累計 23.86 億元，年減 16.33%。</li>
+        <li>獲利偏弱：2026 上半年累計 EPS 3.00 元，年減 25%（Q1 1.39 元、Q2 1.61 元）；2025 全年 EPS 9.03 元。本次配息 5.8 元，約為 2025 EPS 的 64%。</li>
+        <li>歷史填息速度不穩：2024 年約 23–32 天填息、2021 年 15 天、2020 年 26 天，2022、2023 年無填息紀錄（各來源天數略有出入）。</li>
+        <li>殖利率約 6.0%（以 9/14 收盤價 96.3 元計），高於近五年平均現金殖利率 4.34%，但營收與獲利趨勢未提供明確的填息動能。</li>
+      </ul>
+      <div class="risk-box"><b>風險：</b>營收年減、獲利下滑；股價資料為 9/14 收盤，除息前最新股價未取得；2026 年 10 月法人買賣超未查到，籌碼面無法判斷。</div>
+    </div>
+    <p class="lite-note">本次因用量限制，只深入分析 1 檔（本週可確認的個股中僅此一檔除息金額有意義）。</p>
+  </section>
+
+  <section>
+    <h2>個股｜資料有限（未評分）</h2>
+    <table class="lite-table">
+      <thead><tr><th>代號</th><th>名稱</th><th>除息日</th><th class="num">現金股利</th><th class="num">參考股價</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td class="num">7909</td><td>鈺祥</td><td class="num">2026/10/16</td><td class="num">0.365</td><td class="num">704.00</td><td>殖利率約 0.05%，股利金額極小，未深入查證</td></tr>
+      </tbody>
+    </table>
+    <p class="lite-note">另有 7944 睿禾金碳 10/16 為純「權」且現金股利為 0，依規則排除。</p>
+  </section>
+
+  <section>
+    <h2>ETF</h2>
+    <div class="card">
+      <div class="card-title"><span class="name">台新臺灣IC設計</span><span class="ticker">00947</span></div>
+      <div class="card-meta" style="text-align:left;margin-top:6px;">除息日 2026/10/16｜參考股價 40.66｜配息金額來源顯示 0（尚未確認）</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="name">台新AI優息動能</span><span class="ticker">00962</span></div>
+      <div class="card-meta" style="text-align:left;margin-top:6px;">除息日 2026/10/16｜參考股價 15.27｜配息金額來源顯示 0（尚未確認）</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="name">台新BBB投等債20+</span><span class="ticker">00970B</span></div>
+      <div class="card-meta" style="text-align:left;margin-top:6px;">除息日 2026/10/16｜參考股價 8.63｜配息金額來源顯示 0（尚未確認）</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="name">台新美國電力基建</span><span class="ticker">009805</span></div>
+      <div class="card-meta" style="text-align:left;margin-top:6px;">除息日 2026/10/16｜參考股價 15.37｜配息金額來源顯示 0（尚未確認）</div>
+    </div>
+    <p class="lite-note">ETF 不評分。配息金額為 0 可能是來源尚未更新，實際金額請以投信公告為準。</p>
+  </section>
+
+  <footer>
+    <h3>免責聲明</h3>
+    <p>本頁面內容僅為資訊整理與觀察筆記，依據公開網路資料彙整，不構成任何投資建議或買賣邀約。個股填息與否受市場、產業、總經環境等多重因素影響，過去表現不代表未來結果，投資人應自行查證並審慎評估風險，投資前請諮詢專業意見。</p>
+    <h3>評分區間說明</h3>
+    <p>評分僅適用於「已深入分析」個股，區間為 -3 至 +3：+1～+3 表示填息機率相對偏高；0 表示機會與風險相當或資料仍有不足；-1～-3 表示填息機率相對偏低或存在明確風險因素。「資料有限」與 ETF 項目不進行評分。</p>
+    <h3>紅漲綠跌配色說明</h3>
+    <div class="legend-row">
+      <span><span class="legend-dot" style="background:var(--gain);"></span>紅色＝正分（台股慣例紅漲）</span>
+      <span><span class="legend-dot" style="background:var(--loss);"></span>綠色＝負分（台股慣例綠跌）</span>
+      <span><span class="legend-dot" style="background:var(--neutral);"></span>灰色＝中性（0 分或未評分）</span>
+    </div>
+    <h3>資料有限查證限制說明</h3>
+    <p>除權息清單來源（histock 等）僅能取得部分資料，10/9–10/15 期間的完整名單未能確認，本週清單可能有大量遺漏，請以證交所、櫃買中心公告為準。部分股價與法人資料為較早日期，已於各卡片標註；未查證項目不編造分析。</p>
+    <h3>本次用量揭露</h3>
+    <p>清單階段使用 2 次搜尋＋1 次網頁擷取；個股查證使用 2 次搜尋（精華：股價/籌碼、營收/財報各 1 次）。整體共 5 次，在 15 次上限內。本次實際深入查證 1 檔。本次無殖利率超過 8% 之個股，未觸發「利率陷阱」提示。</p>
+  </footer>
+</div>
+</body>
+</html>
