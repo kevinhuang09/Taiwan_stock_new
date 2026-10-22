@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本週除息填息觀察 2026/10/22-10/29</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12161C;
+    --card: #1A2028;
+    --border: #2A323D;
+    --gain: #E5484D;   /* 正分／紅漲 */
+    --loss: #2FA875;   /* 負分／綠跌 */
+    --neutral: #8A93A3;
+    --gold: #D4A24C;
+    --text-main: #EDEFF2;
+    --text-sub: #B4BCC8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1.6;
+    padding: 32px 16px 64px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header {
+    text-align: center;
+    padding: 24px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 8px;
+    letter-spacing: 1px;
+  }
+  header .date-range {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--gold);
+    font-size: 15px;
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 8px;
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .stat .label { font-size: 12.5px; color: var(--text-sub); margin-top: 4px; }
+  .stat.gain .num { color: var(--gain); }
+  .stat.loss .num { color: var(--loss); }
+  .stat.neutral .num { color: var(--neutral); }
+  .stat.gold .num { color: var(--gold); }
+
+  section { margin-bottom: 40px; }
+  section > h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 19px;
+    font-weight: 700;
+    border-left: 4px solid var(--gold);
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-title { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .card-title .name { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 18px; }
+  .card-title .ticker { font-family: 'IBM Plex Mono', monospace; color: var(--text-sub); font-size: 13.5px; }
+  .card-meta { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-sub); text-align: right; }
+
+  .score-circle {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600; font-size: 17px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .score-circle.pos { color: var(--gain); border-color: var(--gain); background: rgba(229,72,77,0.08); }
+  .score-circle.neg { color: var(--loss); border-color: var(--loss); background: rgba(47,168,117,0.08); }
+  .score-circle.zero { color: var(--neutral); border-color: var(--neutral); background: rgba(138,147,163,0.08); }
+
+  .card h4 { margin: 14px 0 6px; font-size: 13.5px; color: var(--text-sub); font-weight: 500; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .card ul li { margin-bottom: 4px; }
+  .reasons li::marker { color: var(--gold); }
+  .risk-box {
+    margin-top: 12px;
+    background: rgba(212,162,76,0.08);
+    border: 1px solid rgba(212,162,76,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+  .risk-box b { color: var(--gold); }
+  .trap-flag {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12.5px;
+    background: rgba(229,72,77,0.15);
+    color: var(--gain);
+    border: 1px solid var(--gain);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+
+  .lite-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .lite-table th, .lite-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .lite-table th {
+    color: var(--text-sub);
+    font-weight: 500;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.02);
+  }
+  .lite-table td.num, .lite-table th.num { font-family: 'IBM Plex Mono', monospace; }
+  .lite-table tr:last-child td { border-bottom: none; }
+  .lite-note {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  .empty-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    color: var(--text-sub);
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--neutral);
+  }
+  footer h3 {
+    font-size: 13.5px;
+    color: var(--text-sub);
+    margin: 18px 0 6px;
+    font-weight: 700;
+  }
+  footer p { margin: 4px 0; }
+  .legend-row { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header><h1>本週除息填息觀察</h1><div class="date-range">資料範圍：2026/10/22 — 2026/10/29（個股除息日 10/22、10/23、10/28、10/29）</div></header>
+<div class="summary"><div class="stat gold"><div class="num">5</div><div class="label">已深入分析</div></div><div class="stat neutral"><div class="num">4</div><div class="label">資料有限</div></div><div class="stat gain"><div class="num">3</div><div class="label">可留意</div></div><div class="stat loss"><div class="num">1</div><div class="label">不建議</div></div></div>
+<section><h2>個股｜已深入分析</h2>
+<div class="card"><div class="card-head"><div class="card-title"><span class="name">牧德</span><span class="ticker">3563</span></div><div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息 10/29｜現金 1｜參考價約 720（10/13）｜殖利率約 0.14%</div><div class="score-circle pos">+2</div></div></div><h4>評分理由</h4><ul class="reasons"><li>股利僅 1 元、殖利率約 0.14%，相對股價極小，填息門檻低；今年 6/29 已另配 12 元，累計 13 元。</li><li>2026 年 8 月營收 3.61 億元、年增 35.68%，創單月新高；1–8 月累計 26.31 億元、年增 14.39%。</li><li>2025 年 EPS 15.8 元、毛利率 61.27%；公司表示 AI 相關設備占比 2026 年達 70%。</li></ul><div class="risk-box"><b>風險：</b>股價高、波動大（10/1 盤中報 754 元、單日跌 6.56%，來源未經核對），單日震幅可能遠大於 1 元股利；未查到 2026 Q2、Q3 EPS 與最新法人籌碼；歷史填息天數本次未查到。殖利率低於 8%，無利率陷阱疑慮。</div></div>
+<div class="card"><div class="card-head"><div class="card-title"><span class="name">遠雄</span><span class="ticker">5522</span></div><div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息 10/29｜現金 1｜參考價約 62.4（10/12）｜殖利率約 1.6%</div><div class="score-circle pos">+1</div></div></div><h4>評分理由</h4><ul class="reasons"><li>2026 年 9 月單月營收 49.95 億元，創十年同期新高；1–9 月累計約 203.23 億元（nStock）。</li><li>2026 上半年 EPS 1.99 元（法說會備忘錄）；2027 年規劃推案總銷約 720 億元。</li><li>本次股利 1 元佔股價比重小。</li></ul><div class="risk-box"><b>風險：</b>今年 6 月已除息 5.5 元，累計 6.5 元，股價已承受一次大額除息；Wantgoo 歷史填息天數從 2 天到 300 多天不等，差異極大；營建股營收認列不均，Q3 財報要到 11 月才公布；未查到最新法人籌碼。殖利率低於 8%，無利率陷阱疑慮。</div></div>
+<div class="card"><div class="card-head"><div class="card-title"><span class="name">世界健身-KY</span><span class="ticker">2762</span></div><div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息 10/29｜現金 1.8072｜殖利率約 2.28%</div><div class="score-circle pos">+1</div></div></div><h4>評分理由</h4><ul class="reasons"><li>2026 Q1 營收 28.11 億元、年增 9.38%；稅後純益 2.19 億元、年增 344.7%，EPS 2.01 元創單季新高。</li><li>毛利率 21.78%、營益率 10.69%，較去年同期明顯改善；5 月營收 9.96 億元創單月新高。</li><li>今年計畫新增 12–15 家據點，股利殖利率約 2.3%，未達高風險區。</li></ul><div class="risk-box"><b>風險：</b>Q1 董事會股利 3.64 元中約一半（1.83 元）來自資本公積，配息品質與盈餘不完全對等；本次 1.8072 元的確切來源本次未逐筆核對。2025 年上半年股利除息後曾填息近 89% 後再回落，最後花 15 個交易日填息，走勢反覆；未查到 10 月最新股價（最新取得為 7/21 的 86.70 元）、會員數與法人籌碼。殖利率低於 8%，無利率陷阱疑慮。</div></div>
+<div class="card"><div class="card-head"><div class="card-title"><span class="name">國統</span><span class="ticker">8936</span></div><div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息 10/22｜現金 3｜殖利率約 5.7–6.3%</div><div class="score-circle zero">0</div></div></div><h4>評分理由</h4><ul class="reasons"><li>去年（2025/10/22，現金 2 元）Yahoo 股利頁顯示填息天數 2 天，為正面參考，但今年股利提高到 3 元（總額約 7.44 億元）。</li><li>近期籌碼偏弱：histock 最新一筆（10/12）外資賣超 842 張、三大法人合計賣超 710 張。</li><li>本次未查到 2026 年營收與 EPS 數字，基本面無法本次確認，因此給 0 分。</li></ul><div class="risk-box"><b>風險：</b>除息日即今日，除息後走勢尚未可得；股價資料多為 8–9 月（9/21 收盤 52.4 元）；殖利率低於 8%，無利率陷阱疑慮。股利金額僅單一報導支持，請以公開資訊觀測站為準。</div></div>
+<div class="card"><div class="card-head"><div class="card-title"><span class="name">力達-KY</span><span class="ticker">4552</span></div><div style="display:flex;align-items:center;gap:12px"><div class="card-meta">除息 10/28｜現金 0.6｜參考價約 15.6｜殖利率約 3.85%</div><div class="score-circle neg">-1</div></div></div><h4>評分理由</h4><ul class="reasons"><li>2026 上半年稅後虧損 867 萬元、每股淨損 0.07 元；Q2 營收 8.98 億元、單季每股虧損 0.19 元。</li><li>6 月營收 2.51 億元、年減約 16.5%；1–6 月累計 16.38 億元。</li><li>nStock 統計近五年平均填息率約 50%；去年 EPS 2.07 元，0.6 元股利來自去年度盈餘，今年已轉虧。</li></ul><div class="risk-box"><b>風險：</b>獲利由盈轉虧、營收衰退，填息缺乏基本面支撐；未查到 Q3 營收、財報與最新法人籌碼，股價資料為 9 月。殖利率低於 8%，無利率陷阱疑慮。</div></div>
+</section>
+<section><h2>個股｜資料有限</h2>
+<table class="lite-table"><thead><tr><th>代號</th><th>名稱</th><th>除息日</th><th>現金股利</th><th>備註</th></tr></thead><tbody>
+<tr><td>8102</td><td>傑霖科技</td><td>10/22</td><td class="num">0.9（殖利率約 1.62%）</td><td>未評分；本次因用量限制未深入查證</td></tr>
+<tr><td>6931</td><td>青松健康</td><td>10/23</td><td class="num">0.12（殖利率約 0.32%）</td><td>未評分；本次因用量限制未深入查證</td></tr>
+<tr><td>2028</td><td>威致</td><td>10/23</td><td class="num">0.2（殖利率約 1.21%）</td><td>未評分；本次因用量限制未深入查證</td></tr>
+<tr><td>2063</td><td>世鎧</td><td>10/28</td><td class="num">0.5＋股票股利 0.1（殖利率約 2.07%）</td><td>未評分；本次因用量限制未深入查證</td></tr>
+</tbody></table>
+<div class="lite-note">已排除僅除權、無現金股利者（如 2025 千興、3691 碩禾，以及 6564、6750、7876 僅增資配股）。</div></section>
+<section><h2>ETF</h2>
+<div class="card"><div class="card-head"><div class="card-title"><span class="name">元大高股息</span><span class="ticker">0056</span></div><div class="card-meta">除息 10/22｜現金 1.72｜約 3.06%</div></div><div style="font-size:14px;color:var(--text-sub)">ETF，不評分。</div></div>
+<div class="card"><div class="card-head"><div class="card-title"><span class="name">債券型 ETF 群</span><span class="ticker">10/22 除息</span></div><div class="card-meta">單次配息（殖利率為單期）</div></div><div style="font-size:14px;color:var(--text-sub)">00719B 元大美債1-3（0.27）、00720B 元大投資級公司債（0.46）、00788B 元大10年IG電能債（0.37）、00834B 第一金金融債10+（0.415）、00870B 元大15年EM主權債（0.38）、00967B 元大優息美債（0.033）、00968B 元大優息投等債（0.043）、00981B 第一金優選非投債（0.063）。債券 ETF，不評分。</div></div>
+</section>
+<footer>
+<h3>免責聲明</h3><p>本頁內容僅為公開資料整理與個人觀察，不構成任何投資建議或買賣邀約。投資有風險，過去填息紀錄不代表未來表現，請自行判斷並承擔風險。</p>
+<h3>評分區間說明</h3><p>範圍 -3 至 +3：+3～+1 填息機率偏高；0 機會與風險相當或資料不足；-1～-3 填息機率偏低或有明確風險。僅對已深入查證的個股評分，ETF 與資料有限個股不評分。</p>
+<h3>配色說明（台股慣例：紅漲綠跌）</h3><div class="legend-row"><span><i class="legend-dot" style="background:var(--gain)"></i>紅＝正分</span><span><i class="legend-dot" style="background:var(--loss)"></i>綠＝負分</span><span><i class="legend-dot" style="background:var(--neutral)"></i>灰＝0 分／資料不足</span></div>
+<h3>資料限制與用量揭露</h3><p>除權息清單取自 histock 除權息預告頁，可能不完整，且部分 ETF（如 10/27 除息者）未列入；部分金額與股價來自預告性報導或較舊資料，未逐一核對公司公告。多數個股查不到 10 月最新股價與法人籌碼，各項評分皆受此限制。本次因用量限制，實際深入查證 5 檔（牧德、遠雄、世界健身-KY、國統、力達-KY），其餘 4 檔列入資料有限。web_search 12 次、web_fetch 1 次，共 13 次，未超出 15 次上限。</p>
+</footer>
+</div></body></html>
